@@ -177,6 +177,12 @@ final class ExtraParamsHelper {
         if (subfilter != null && !subfilter.trim().isEmpty()) {
         	p.put("signatureSubFilter", subfilter); //$NON-NLS-1$
         }
+
+        // PAdES tamano maximo de firma
+        final String signSize = PreferencesManager.get(PreferencesManager.PREFERENCE_PADES_SIGN_SIZE);
+        if (signSize != null && !signSize.trim().isEmpty()) {
+        	p.put("signSize", signSize); //$NON-NLS-1$
+        }
 		return p;
 	}
 

@@ -184,15 +184,13 @@
    </dd>
   <dt><b><i>signatureRubricImage</i></b></dt>
    <dd>Imagen JPEG codificada en Base64 de la r&uacute;brica de la firma manuscrita que se desea aparezca como firma visible en el PDF.</dd>
-  <dt><b><i>layer2Text</i></b></dt>
+  <dt><br/><b><i>layer2Text</i></b></dt>
    <dd>
-    <p>
      Texto a escribir dentro de la "capa 2" de la firma visible.<br>
      Este texto se escribe &uacute;nicamente si no se ha especificado una
      imagen de r&uacute;brica, y necesita que se indique la p&aacute;gina y la situaci&oacute;n d&oacute;nde mostrar el recuadro de firma
      mediante los par&aacute;metros <code>signaturePositionOnPageLowerLeftX</code>, <code>signaturePositionOnPageLowerLeftY</code>,
      <code>signaturePositionOnPageUpperRightX</code>, <code>signaturePositionOnPageUpperRightY</code> y <code>signaturePage</code>.
-    </p>
     <p>
      Este texto puede incluir una serie de palabras clave que ser&aacute;n sustituidas por los textos apropiados del titular o emisor del
      certificado de firma:
@@ -334,6 +332,12 @@
     <b>Si el par&aacute;metro <code>headLess</code> est&aacute; establecido a <code>true</code>, no podr&aacute; mostrar el di&aacute;logo
     de confirmaci&oacute;n as&iacute; que llegados a este punto se lanzar&aacute; una excepci&oacute;n.</b><br>
     No se soporta el cifrado de documentos PDF con certificados o con algoritmo AES256.
+   </dd>
+  <dt><b><i>signSize</i></b></dt>
+   <dd>
+   Define el espacio en n&uacute;mero de caracteres que se reservar&aacute; en el documento PDF para almacenar la firma electrónica. 
+   Si el tama&ntilde;o de la firma generada es superior al tama&ntilde;o reservado se lanzará una excepci&oacute;n. Debido a que 
+   la firma se guarda como un string hexadecimal, el tama&ntilde;o total de la firma será 2 * signSize + 2 Bytes.
    </dd>
   <dt><b><i>tsType</i></b></dt>
    <dd>

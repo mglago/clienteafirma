@@ -234,6 +234,20 @@ public final class PdfSessionManager {
 		// Color del tipo de letra en capa 2
 		final String layer2FontColor = extraParams.getProperty(PdfExtraParams.LAYER2_FONTCOLOR);
 
+		// Espacio que se reserva para la firma
+		int signSize;
+		try {
+			signSize = extraParams.getProperty(PdfExtraParams.SIGN_SIZE) != null ?
+				Integer.parseInt(extraParams.getProperty(PdfExtraParams.SIGN_SIZE).trim()) :
+					CSIZE;
+		}
+		catch(final Exception e) {
+			LOGGER.warning(
+				"Se ha indicado un tamano maximo de firma no valido ('" + extraParams.getProperty(PdfExtraParams.SIGN_SIZE) + "'): " + e //$NON-NLS-1$ //$NON-NLS-2$
+			);
+			signSize = CSIZE;
+		}
+
 		// ** Fin texto firma visible **
 		// *****************************
 
@@ -518,7 +532,7 @@ public final class PdfSessionManager {
 
 		// Reservamos el espacio necesario en el PDF para insertar la firma
 		final HashMap<PdfName, Integer> exc = new HashMap<>();
-		exc.put(PdfName.CONTENTS, Integer.valueOf(CSIZE * 2 + 2));
+		exc.put(PdfName.CONTENTS, Integer.valueOf(signSize * 2 + 2));
 
 		try {
 			sap.preClose(exc, signTime);

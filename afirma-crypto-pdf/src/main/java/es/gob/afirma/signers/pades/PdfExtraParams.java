@@ -397,6 +397,9 @@ public final class PdfExtraParams {
     /** Contrase&ntilde;a del pdf en caso de se encuentre protegido contra modificaciones y/o aperturas. */
     static final String USER_PASSWORD = "userPassword";//$NON-NLS-1$
 
+    /** Tamaño máximo reservado para la firma PAdES */
+    static final String SIGN_SIZE = "signSize";
+
     /** Constructor vac&iacute;o privado para que no se pueda instanciar la clase ya que es est&aacute;tico. */
     private PdfExtraParams(){
         // No instanciable

@@ -349,11 +349,23 @@ public final class PAdESTriPhaseSigner {
     private static byte[] insertSignatureOnPdf(final byte[] inPdf,
     		                                   final Certificate[] signerCertificateChain,
     		                                   final PdfSignResult signature) throws AOException, IOException {
-        final byte[] outc = new byte[CSIZE];
+    	Properties extraParams = signature.getExtraParams();
+		int signSize;
+		try {
+			signSize = extraParams.getProperty(PdfExtraParams.SIGN_SIZE) != null ?
+				Integer.parseInt(extraParams.getProperty(PdfExtraParams.SIGN_SIZE).trim()) :
+					CSIZE;
+		}
+		catch(final Exception e) {
+			throw new AOException(
+				"Se ha indicado un tamano maximo de firma no valido ('" + extraParams.getProperty(PdfExtraParams.SIGN_SIZE) + "'): " + e //$NON-NLS-1$ //$NON-NLS-2$
+			);
+		}
+        final byte[] outc = new byte[signSize];
 
-        if (signature.getSign().length > CSIZE) {
+        if (signature.getSign().length > signSize) {
         	throw new AOException(
-    			"El tamano de la firma (" + signature.getSign().length + ") supera el maximo permitido para un PDF (" + CSIZE + ")" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+    			"El tamano de la firma (" + signature.getSign().length + ") supera el maximo permitido para un PDF (" + signSize + ")" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			);
         }
 
