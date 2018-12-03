@@ -280,6 +280,13 @@ public final class PdfExtraParams {
      * </ul> */
     static final String LAYER2_FONTCOLOR = "layer2FontColor";//$NON-NLS-1$
 
+    /** Si se establece a <code>true</code> se insertar&aacute; una imagen en la firma visible que, una vez se abra mediante
+     * un lector capaz de interpretarla (como Adobe Reader) representar&aacute; el estado de validez de la firma, seg&uacute;n
+     * el lector. Una firma generada conm este par&aacute;metro activo no cumple el est&aacute;ndar PAdES. Esta imagen no se
+     * insertar&aacute; si se utiliza el par&aacute;metro signatureRubricImage.
+     */
+    static final String VERIFICATION_IMAGE = "verificationImage";//$NON-NLS-1$
+
     /** Raz&oacute;n por la que se realiza la firma (este dato se a&ntilde;ade al diccionario PDF, y no a la propia firma). */
     static final String SIGN_REASON = "signReason";//$NON-NLS-1$
 

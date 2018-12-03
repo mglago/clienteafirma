@@ -234,6 +234,9 @@ public final class PdfSessionManager {
 		// Color del tipo de letra en capa 2
 		final String layer2FontColor = extraParams.getProperty(PdfExtraParams.LAYER2_FONTCOLOR);
 
+		// Usar configuracion de firma anterior a acrobat 6 para insertar una imagen de verificacion
+		final Boolean verificationImage = Boolean.parseBoolean(extraParams.getProperty(PdfExtraParams.VERIFICATION_IMAGE));
+
 		// ** Fin texto firma visible **
 		// *****************************
 
@@ -364,7 +367,7 @@ public final class PdfSessionManager {
 		if (pdfVersion > PDF_MIN_VERSION && !pdfA1 && !"false".equalsIgnoreCase(extraParams.getProperty(PdfExtraParams.COMPRESS_PDF))) { //$NON-NLS-1$
 			stp.setFullCompression();
 		}
-		sap.setAcro6Layers(true);
+		sap.setAcro6Layers(!verificationImage);
 
 		PdfUtil.enableLtv(stp);
 

@@ -138,7 +138,10 @@ public final class PdfTimestamper {
 
 	        		PdfUtil.enableLtv(stp);
 
-	        		sap.setAcro6Layers(true);
+	        		// Usar configuracion de firma anterior a acrobat 6 para insertar una imagen de verficacion
+	        		final Boolean verificationImage = Boolean.parseBoolean(extraParams.getProperty(PdfExtraParams.VERIFICATION_IMAGE));
+
+	        		sap.setAcro6Layers(!verificationImage);
 	        		sap.setRender(PdfSignatureAppearance.SignatureRenderDescription);
 	        		sap.setSignDate(signTime);
 
