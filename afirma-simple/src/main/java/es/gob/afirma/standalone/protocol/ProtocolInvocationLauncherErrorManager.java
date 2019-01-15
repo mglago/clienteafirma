@@ -133,6 +133,6 @@ final class ProtocolInvocationLauncherErrorManager {
 	}
 
 	static String getErrorMessage(final String code) {
-		return ERRORS.get(code); //$NON-NLS-1$
+		return code + ": " + ERRORS.get(code); //$NON-NLS-1$
 	}
 }
