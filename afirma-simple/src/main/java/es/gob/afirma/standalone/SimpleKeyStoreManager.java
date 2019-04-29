@@ -37,14 +37,21 @@ public final class SimpleKeyStoreManager {
     /** Obtiene un <code>KeyStore</code>.
      * @param dnie <code>true</code> si desea obtenerse un <code>KeyStore</code> para DNIe, <code>false</code> si desea obtenerse
      *        el <code>KeyStore</code> por defecto del sistema operativo.
+     * @param forced Si {@code true}, es obligatorio el uso del DNIe en caso de solicitarlo y no se
+     * deber&aacute; cargar un almacen por defecto incluso si el usuario no lo proporciona.
      * @param parent Componente padre para la modalidad.
      * @return <code>KeyStore</code> apropiado.
-     * @throws AOKeyStoreManagerException Si ocurre cualquier problema durante la obtenci&oacute;n del <code>KeyStore</code>. */
-    static AOKeyStoreManager getKeyStore(final boolean dnie, final Component parent) throws AOKeyStoreManagerException {
+     * @throws AOKeyStoreManagerException Si ocurre cualquier problema durante la obtenci&oacute;n del <code>KeyStore</code>.
+     * @throws NoDnieFoundException Si se obliga al uso de DNIe pero este no se proporciona. */
+    static AOKeyStoreManager getKeyStore(final boolean dnie, final boolean forced, final Component parent)
+    		throws AOKeyStoreManagerException, NoDnieFoundException {
 
     	// -- Se ha habilitado el uso de DNIe --
 
         if (dnie) {
+
+            JMulticardUtilities.configureJMulticard(true);
+
             try {
             	return getKeyStoreManager(AOKeyStore.DNIEJAVA, parent);
             }
@@ -77,7 +84,7 @@ public final class SimpleKeyStoreManager {
             				JOptionPane.YES_NO_OPTION,
             				JOptionPane.WARNING_MESSAGE
         				)) {
-                			return getKeyStore(true, parent);
+                			return getKeyStore(true, forced, parent);
                 		}
                 		break;
             		case "es.gob.jmulticard.card.InvalidCardException": //$NON-NLS-1$
@@ -88,7 +95,7 @@ public final class SimpleKeyStoreManager {
                 				JOptionPane.YES_NO_OPTION,
                 				JOptionPane.WARNING_MESSAGE
             				)) {
-                    			return getKeyStore(true, parent);
+                    			return getKeyStore(true, forced, parent);
                     		}
                     		break;
 
@@ -112,17 +119,22 @@ public final class SimpleKeyStoreManager {
         				);
             	}
             }
+
+            // Si era obligatorio el uso de DNIe, devolvemos una excepcion indicando que no se ha proporcionado
+            if (forced) {
+            	throw new NoDnieFoundException();
+            }
         }
 
         // El por defecto
 
         // -- Comportamiento por defecto --
 
-        // Configuramos el uso de JMulticard segun lo establecido en el dialogo
-        // de preferencias
-        final boolean defaultBehavior = PreferencesManager.getBoolean(
+        // Configuramos el uso de JMulticard segun lo establecido en el dialogo de preferencias
+        final boolean enableJMulticard = PreferencesManager.getBoolean(
         		PreferencesManager.PREFERENCE_GENERAL_ENABLED_JMULTICARD);
-        JMulticardUtilities.configureJMulticard(defaultBehavior);
+
+        JMulticardUtilities.configureJMulticard(enableJMulticard);
 
         // Cargamos el almacen por defecto
 

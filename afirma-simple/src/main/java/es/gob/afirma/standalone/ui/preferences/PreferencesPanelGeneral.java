@@ -268,7 +268,7 @@ final class PreferencesPanelGeneral extends JScrollPane {
 
 		// En Windows, se dara la posibilidad de configurar el comportamiento de
 		// JMulticard. Para el resto de sistemas, es obligatorio su uso
-		if (Platform.getOS() == Platform.OS.WINDOWS) {
+		if (Platform.getOS() == Platform.OS.WINDOWS || Platform.getOS() == Platform.OS.LINUX) {
 			this.enableJMulticard.getAccessibleContext().setAccessibleDescription(
 					SimpleAfirmaMessages.getString("PreferencesPanel.166")); //$NON-NLS-1$
 			this.enableJMulticard.setMnemonic('j');
@@ -276,6 +276,8 @@ final class PreferencesPanelGeneral extends JScrollPane {
 			this.enableJMulticard.addKeyListener(keyListener);
 			signConfigPanel.add(this.enableJMulticard, signConstraint);
 		}
+
+
 		mainPanel.add(signConfigPanel, gbc);
 
 		final JPanel innerPanel = new JPanel(new GridBagLayout());

@@ -99,12 +99,7 @@ public final class KeyStoreUtilities {
 
         final StringBuilder buffer = new StringBuilder("library="); //$NON-NLS-1$
 
-        if (lib.contains(")") || lib.contains("(")) { //$NON-NLS-1$ //$NON-NLS-2$
-        	buffer.append(getShort(lib));
-        }
-        else {
-        	buffer.append(lib);
-        }
+        buffer.append(getLibraryPath(lib));
 		buffer.append("\r\n") //$NON-NLS-1$
 
 	        // Ignoramos la descripcion que se nos proporciona, ya que el
@@ -134,7 +129,39 @@ public final class KeyStoreUtilities {
         return buffer.toString();
     }
 
-    private static final int ALIAS_MAX_LENGTH = 120;
+
+    /** Obtiene la ruta de la biblioteca de tal forma que es apta para su
+     * uso carga mediante NSS.
+     * @param lib Biblioteca del que obtener la ruta..
+     * @return Ruta de la biblioteca.
+     */
+    private static String getLibraryPath(final String lib) {
+
+    	File resultFile = new File(lib);
+
+    	// Si no encontramos el fichero y es una ruta relativa, trataremos de componer la ruta completa
+    	if (!resultFile.isFile() && !resultFile.isAbsolute()) {
+    		boolean found = false;
+    		File libraryFile;
+    		final String[] libraryPaths = System.getProperty("java.library.path").split(File.pathSeparator); //$NON-NLS-1$
+    		for (int i = 0; i < libraryPaths.length && !found; i++) {
+    			libraryFile = new File(libraryPaths[i], lib);
+    			if (libraryFile.isFile()) {
+    				resultFile = libraryFile;
+    				found = true;
+    			}
+    		}
+    	}
+
+    	// Si lo creemos necesario, utilizamos la forma corta de la ruta
+    	String libPath = resultFile.getAbsolutePath();
+    	if (libPath.contains(")") || libPath.contains("(")) { //$NON-NLS-1$ //$NON-NLS-2$
+        	libPath = getShort(libPath);
+        }
+		return libPath;
+	}
+
+	private static final int ALIAS_MAX_LENGTH = 120;
 
     /** Obtiene una mapa con las descripciones usuales de los alias de
      * certificados (como claves de estas &uacute;ltimas). Se aplicar&aacute;n los
@@ -319,7 +346,7 @@ public final class KeyStoreUtilities {
 	 * @throws AOCancelledOperationException Cuando se cancela la carga del almac&eacute;n. */
 	public static boolean addPreferredKeyStoreManagers(final AggregatedKeyStoreManager aksm,
 			                                           final Object parentComponent) {
-		// Anadimos el controlador Java del DNIe SIEMPRE excepto a menos que se indique lo contrario
+		// Anadimos el controlador Java del DNIe SIEMPRE excepto que se indique lo contrario
 		// mediante una variable de entorno de sistema operativo o una propiedad Java
 		if (
 			!Boolean.getBoolean(DISABLE_DNIE_NATIVE_DRIVER) &&
@@ -337,13 +364,11 @@ public final class KeyStoreUtilities {
 			}
 		}
 
-		// Anadimos el controlador Java de CERES SIEMPRE a menos que el sistema sea Linux o
-		// se indique lo contrario mediante una variable de entorno de sistema operativo o
-		// una propiedad Java
+		// Anadimos el controlador Java de CERES SIEMPRE a menos que se indique lo contrario
+		// mediante una variable de entorno de sistema operativo o una propiedad Java
 		if (
 			!Boolean.getBoolean(DISABLE_CERES_NATIVE_DRIVER) &&
-			!Boolean.parseBoolean(System.getenv(DISABLE_CERES_NATIVE_DRIVER_ENV)) &&
-			!Platform.OS.LINUX.equals(Platform.getOS())
+			!Boolean.parseBoolean(System.getenv(DISABLE_CERES_NATIVE_DRIVER_ENV))
 		) {
 			// Tarjeta CERES 430
 			try {
@@ -543,12 +568,16 @@ public final class KeyStoreUtilities {
 
     /** Manejador para la gesti&oacute;n de la contrase&ntilde;a (y otros di&aacute;logos)
      * de un almac&eacute;n de claves. */
-    private static class PasswordCallbackHandler implements CallbackHandler {
+    public static class PasswordCallbackHandler implements CallbackHandler {
 
     	private final Object parentComponent;
     	private final PasswordCallback pssCallBack;
     	private boolean cancelled = false;
 
+    	/** Construye un manejador para la gesti&oacute;n de la contrase&ntilde;a (y otros di&aacute;logos)
+         * de un almac&eacute;n de claves.
+    	 * @param parentComponent Componente padre para la modalidad.
+    	 * @param pssCallBack <code>PasswordCallback</code> para solicitar la contrase&ntilde;a. */
     	public PasswordCallbackHandler(final Object parentComponent, final PasswordCallback pssCallBack) {
     		this.parentComponent = parentComponent;
     		this.pssCallBack = pssCallBack;

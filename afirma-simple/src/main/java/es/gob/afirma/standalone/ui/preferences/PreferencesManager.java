@@ -29,15 +29,12 @@ public final class PreferencesManager {
 
 		properties = new Properties();
 		try {
-
-			properties.load(PreferencesManager.class.getResourceAsStream("/properties/preferences.properties" //$NON-NLS-1$
-			));
+			properties.load(PreferencesManager.class.getResourceAsStream("/properties/preferences.properties")); //$NON-NLS-1$
 		} catch (final Exception e) {
 			LOGGER.severe(
 					"No han podido cargarse los valores por defecto del fichero de configuracion de preferencias, se usaran los valores por defecto: " //$NON-NLS-1$
 							+ e);
 		}
-
 	}
 
 	private PreferencesManager() {
@@ -91,6 +88,12 @@ public final class PreferencesManager {
 	 * si hay publicadas versiones m&aacute;s actuales del aplicativo. Un valor de <code>false</code> har&aacute; que no se haga
 	 * esta comprobaci&oacute;n. */
 	public static final String PREFERENCE_GENERAL_UPDATECHECK = "checkForUpdates"; //$NON-NLS-1$
+
+	/** Comprobar que la versi&oacute;n actual de Java est&aacute; soportada.
+	 * Un valor de <code>true</code> en esta preferencia hace que, al arrancar, la aplicaci&oacute;n compruebe autom&aacute;ticamente
+	 * si la versi&oacute;n de Java con la que se ejecuta la aplicaci&oacute;n est&aacute; entre las versiones soportadas. Un valor de
+	 * <code>false</code> har&aacute; que no se haga esta comprobaci&oacute;n. */
+	public static final String PREFERENCE_GENERAL_CHECK_JAVA_VERSION = "checkJavaVersion"; //$NON-NLS-1$
 
 	/** Env&iacute;a estad&iacute;sticas de uso.
 	 * Un valor de <code>true</code> en esta preferencia hace que, al arrancar, la aplicaci&oacute;n env&iacute;e
@@ -237,7 +240,7 @@ public final class PreferencesManager {
 	 *  <li>XAdES Enveloped</li>
 	 * </ul> */
 	public static final String PREFERENCE_XADES_SIGN_FORMAT = "xadesSignFormat"; //$NON-NLS-1$
-	
+
 	/** Realizar cofirma en multifirmas XAdES. */
 	public static final String PREFERENCE_XADES_MULTISIGN_COSIGN = "xadesMultisignCosign";  //$NON-NLS-1$
 
