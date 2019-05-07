@@ -151,8 +151,19 @@ public final class PdfTimestamper {
 	        		sap.setCryptoDictionary(pdfSignature);
 
 	        		// Reservamos el espacio necesario en el PDF para insertar la firma
+	        		int signSize;
+	        		try {
+	        			signSize = extraParams.getProperty(PdfExtraParams.SIGN_SIZE) != null ?
+	        				Integer.parseInt(extraParams.getProperty(PdfExtraParams.SIGN_SIZE).trim()) :
+	        					CSIZE;
+	        		}
+	        		catch(final Exception e) {
+	        			throw new AOException(
+	        				"Se ha indicado un tamano de sello de timepo no valido ('" + extraParams.getProperty(PdfExtraParams.SIGN_SIZE) + "'): " + e //$NON-NLS-1$ //$NON-NLS-2$
+	        			);
+	        		}
 	        		final HashMap<PdfName, Integer> exc = new HashMap<>();
-	        		exc.put(PdfName.CONTENTS, Integer.valueOf(CSIZE * 2 + 2));
+	        		exc.put(PdfName.CONTENTS, Integer.valueOf(signSize * 2 + 2));
 
 	        		try {
 						sap.preClose(exc, signTime);
@@ -168,11 +179,11 @@ public final class PdfTimestamper {
 	        		final byte[] tspToken = getTspToken(extraParams, original, signTime);
 
 	            	// Y lo insertamos en el PDF
-	        		final byte[] outc = new byte[CSIZE];
+	        		final byte[] outc = new byte[signSize];
 
-	                if (tspToken.length > CSIZE) {
+	                if (tspToken.length > signSize) {
 	                	throw new AOException(
-	            			"El tamano del sello de tiempo (" + tspToken.length + ") supera el maximo permitido para un PDF (" + CSIZE + ")" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+	            			"El tamano del sello de tiempo (" + tspToken.length + ") supera el maximo permitido para un PDF (" + signSize + ")" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 	        			);
 	                }
 

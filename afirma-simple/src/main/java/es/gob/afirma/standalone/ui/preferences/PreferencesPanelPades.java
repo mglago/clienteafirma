@@ -19,6 +19,7 @@ import static es.gob.afirma.standalone.ui.preferences.PreferencesManager.PREFERE
 import static es.gob.afirma.standalone.ui.preferences.PreferencesManager.PREFERENCE_PADES_SIGN_REASON;
 import static es.gob.afirma.standalone.ui.preferences.PreferencesManager.PREFERENCE_PADES_STAMP;
 import static es.gob.afirma.standalone.ui.preferences.PreferencesManager.PREFERENCE_PADES_VISIBLE;
+import static es.gob.afirma.standalone.ui.preferences.PreferencesManager.PREFERENCE_PADES_SIGN_SIZE;
 
 import java.awt.Color;
 import java.awt.Container;
@@ -94,6 +95,8 @@ final class PreferencesPanelPades extends JScrollPane {
 	private final JTextField padesSignProductionCity = new JTextField();
 
 	private final JTextField padesSignerContact = new JTextField();
+
+	private final JTextField signatureSize = new JTextField();
 
 	private final JCheckBox visiblePdfSignature = new JCheckBox(SimpleAfirmaMessages.getString("PreferencesPanel.79")); //$NON-NLS-1$
 	private final JCheckBox visiblePdfStamp = new JCheckBox(SimpleAfirmaMessages.getString("PreferencesPanel.172")); //$NON-NLS-1$
@@ -335,6 +338,11 @@ final class PreferencesPanelPades extends JScrollPane {
 		);
 		fileFormatLabel.setLabelFor(this.padesBasicFormat);
 
+		final JLabel signSizeLabel = new JLabel(
+				SimpleAfirmaMessages.getString("PreferencesPanel.173") //$NON-NLS-1$
+		);
+		signSizeLabel.setLabelFor(this.signatureSize);
+
 		// Colocamos los elementos
 		final GridBagConstraints c = new GridBagConstraints();
 		c.anchor = GridBagConstraints.LINE_START;
@@ -344,6 +352,11 @@ final class PreferencesPanelPades extends JScrollPane {
 		innerPanel.add(fileFormatLabel, c);
 		c.gridx = 1;
 		innerPanel.add(this.padesBasicFormat, c);
+		c.gridx = 0;
+		c.gridy++;
+		innerPanel.add(signSizeLabel, c);
+		c.gridx = 1;
+		innerPanel.add(this.signatureSize,c);
 		c.gridx = 0;
 		c.gridy++;
 		c.gridwidth = 2;
@@ -377,6 +390,8 @@ final class PreferencesPanelPades extends JScrollPane {
 		// Firma PDF visible
 		PreferencesManager.put(PREFERENCE_PADES_VISIBLE, Boolean.toString(this.visiblePdfSignature.isSelected()));
 		PreferencesManager.put(PREFERENCE_PADES_STAMP, Boolean.toString(this.visiblePdfStamp.isSelected()));
+
+		PreferencesManager.put(PREFERENCE_PADES_SIGN_SIZE, this.signatureSize.getText());
 
 		if ("".equals(this.padesSignerContact.getText())) { //$NON-NLS-1$
 			PreferencesManager.remove(PREFERENCE_PADES_SIGNER_CONTACT);
@@ -428,6 +443,7 @@ final class PreferencesPanelPades extends JScrollPane {
 		this.padesSignerContact.setText(PreferencesManager.get(PREFERENCE_PADES_SIGNER_CONTACT));
 		this.visiblePdfSignature.setSelected(PreferencesManager.getBoolean(PREFERENCE_PADES_VISIBLE));
 		this.visiblePdfStamp.setSelected(PreferencesManager.getBoolean(PREFERENCE_PADES_STAMP));
+		this.signatureSize.setText(PreferencesManager.get(PREFERENCE_PADES_SIGN_SIZE));
 
         final ComboBoxModel<Object> padesFormatModel = this.padesBasicFormat.getModel();
         final String selectedValue = PreferencesManager.get(PREFERENCE_PADES_FORMAT);
@@ -471,7 +487,8 @@ final class PreferencesPanelPades extends JScrollPane {
 		this.padesSignerContact.setText(PreferencesManager.getDefaultPreference(PREFERENCE_PADES_SIGNER_CONTACT));
 		this.visiblePdfSignature.setSelected(PreferencesManager.getBooleanDefaultPreference(PREFERENCE_PADES_VISIBLE));
 		this.visiblePdfStamp.setSelected(PreferencesManager.getBooleanDefaultPreference(PREFERENCE_PADES_STAMP));
-
+		this.signatureSize.setText(PreferencesManager.getDefaultPreference(PREFERENCE_PADES_SIGN_SIZE));
+		
         if (this.padesBasicFormat.getItemCount() > 0) {
 			this.padesBasicFormat.setSelectedIndex(0);
 		}

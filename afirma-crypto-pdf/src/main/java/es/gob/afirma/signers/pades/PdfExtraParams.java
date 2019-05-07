@@ -408,6 +408,9 @@ public final class PdfExtraParams {
      * PDF podr&aacute; utilizar para indicar si la firma es v&aacute;lida o no. */
     static final String INCLUDE_QUESTION_MARK = "includeQuestionMark";//$NON-NLS-1$
 
+    /** Tamaño máximo reservado para la firma PAdES */
+    static final String SIGN_SIZE = "signSize";
+
     /** Constructor vac&iacute;o privado para que no se pueda instanciar la clase ya que es est&aacute;tico. */
     private PdfExtraParams(){
         // No instanciable

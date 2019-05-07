@@ -302,6 +302,9 @@ public final class PreferencesManager {
 	 * documento. */
 	public static final String PREFERENCE_PADES_STAMP = "padesVisibleStamp"; //$NON-NLS-1$
 
+	/** M&aacute;ximo tama&ntilde;o de datos que se reservar&aacute; en el documento PDF para la firma PAdES */
+	public static final String PREFERENCE_PADES_SIGN_SIZE = "padesSignSize"; //$NON-NLS-1$
+
 	//************************* FIN PREFERENCIAS DE FIRMAS PAdES ***************************************************************
 	//**************************************************************************************************************************
 
