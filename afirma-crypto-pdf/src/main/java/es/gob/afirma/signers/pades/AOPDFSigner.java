@@ -18,6 +18,7 @@ import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Locale;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.aowagie.text.exceptions.BadPasswordException;
@@ -429,10 +430,12 @@ public final class AOPDFSigner implements AOSigner {
     			pcks7 = af.verifySignature(signatureName);
     		}
     		catch(final Exception e) {
-    			LOGGER.severe(
+    			LOGGER.log(
+					Level.SEVERE,
 					"El PDF contiene una firma corrupta o con un formato desconocido (" + //$NON-NLS-1$
 						signatureName +
-							"), se continua con las siguientes si las hubiese: " + e //$NON-NLS-1$
+							"), se continua con las siguientes si las hubiese: " + e, //$NON-NLS-1$
+					e
 				);
     			continue;
     		}
@@ -445,7 +448,7 @@ public final class AOPDFSigner implements AOSigner {
 
     			final AOSimpleSignInfo ssi = new AOSimpleSignInfo(
 					certChain,
-					pcks7.getSignDate().getTime()
+					pcks7.getSignDate() != null ? pcks7.getSignDate().getTime() : null
 				);
 
     			// Extraemos el PKCS#1 de la firma

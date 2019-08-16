@@ -38,24 +38,28 @@ public final class RFC2254CertificateFilter extends CertificateFilter {
     private final boolean recurseIssuers;
 
     /** Construye un filtro para certificados mediante expresi&oacute;n RFC2254.
-     * @param subjectFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del titular (subject)
-     * @param issuerFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del emisor (issuer)
+     * @param subjectFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del titular (<i>subject</i>).
+     *                      Si se indica <code>null</code> se acepta cualquier titular.
+     * @param issuerFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del emisor (<i>issuer</i>).
+     *                     Si se indica <code>null</code> se acepta cualquier emisor.
      * @param recurse Si se establece a <code>true</code>, el filtro para el emisor se aplica a cada uno de
      *                los certificados de la cadena de confianza de emisi&oacute;n, d&aacute;ndose el filtro
      *                por positivo si al menos uno de los certificados de esta cadena pasa el fltro establecido
      *                para el titular. */
     public RFC2254CertificateFilter(final String subjectFilter, final String issuerFilter, final boolean recurse) {
-        if (subjectFilter == null && issuerFilter == null) {
+        if ((subjectFilter == null || subjectFilter.isEmpty()) && (issuerFilter == null || issuerFilter.isEmpty())) {
             throw new IllegalArgumentException("Al menos uno de los criterios de filtrado debe no ser nulo"); //$NON-NLS-1$
         }
-        this.rfc2254IssuerFilter = issuerFilter;
-        this.rfc2254SubjectFilter = subjectFilter;
+        this.rfc2254IssuerFilter = issuerFilter != null && !issuerFilter.isEmpty() ? issuerFilter : null;
+        this.rfc2254SubjectFilter = subjectFilter != null && !subjectFilter.isEmpty() ? subjectFilter : null;
         this.recurseIssuers = recurse;
     }
 
     /** Construye un filtro para certificados.
-     * @param subjectFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del titular (subject)
-     * @param issuerFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del emisor (issuer) */
+     * @param subjectFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del titular (<i>subject</i>).
+     *                      Si se indica <code>null</code> se acepta cualquier titular.
+     * @param issuerFilter Cadena seg&uacute;n la RFC2254 para filtro por el campo del emisor (<i>issuer</i>).
+     *                     Si se indica <code>null</code> se acepta cualquier titular. */
     public RFC2254CertificateFilter(final String subjectFilter, final String issuerFilter) {
         this(subjectFilter, issuerFilter, false);
     }
